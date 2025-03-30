@@ -8,57 +8,38 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
-use Ihabrouk\EmailTemplates\CommsPanel;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class EmailTemplatesServiceProvider extends ServiceProvider
+class EmailTemplatesServiceProvider extends PackageServiceProvider
 {
-    public function register(): void
+    public static string $name = 'email-templates';
+
+    public function configurePackage(Package $package): void
     {
-        // Register the panel provider
-        $this->app->register(CommsPanel::class);
+        $package
+            ->name(static::$name)
+            ->hasConfigFile()
+            ->hasMigrations(['create_email_templates_table'])
+            ->hasTranslations()
+            ->hasRoute('web')
+            ->hasViews()
+            ->hasInstallCommand(function(InstallCommand $command) {
+                $command
+                    ->publishMigrations()
+                    ->publishConfigFile()
+                    ->askToRunMigrations();
+            });
     }
 
-    public function boot(): void
+    public function packageRegistered(): void
     {
-        // Register view namespace
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'email-templates');
-        
-        // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-        
-        // Register translations if needed
-        // $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'email-templates');
-        
-        // Register assets for our package and dependencies
-        $this->registerAssets();
-        
-        // Publish configuration
-        if ($this->app->runningInConsole()) {
-            // Views
-            $this->publishes([
-                __DIR__ . '/../../resources/views' => resource_path('views/vendor/email-templates'),
-            ], 'email-templates-views');
-            
-            // Migrations
-            $this->publishes([
-                __DIR__ . '/../../database/migrations' => database_path('migrations'),
-            ], 'email-templates-migrations');
-            
-            // Config
-            $this->publishes([
-                __DIR__ . '/../../config' => config_path('email-templates'),
-            ], 'email-templates-config');
-        }
+        // Register services here
     }
 
-    protected function registerAssets(): void
+    public function packageBooted(): void
     {
-        // Register any necessary assets
-        FilamentAsset::register([
-            // Include any CSS/JS assets necessary for your package
-            // The visual builder email templates assets will be registered by its own service provider
-        ]);
+        // Register resources, pages, etc.
     }
 }
