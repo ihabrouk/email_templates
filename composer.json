@@ -1,0 +1,40 @@
+{
+    "name": "ihabrouk/email_templates",
+    "description": "Email Templates Management Plugin for FilamentPHP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ihabrouk\\EmailTemplates\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ihabrouk",
+            "email": "ihabrouk@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "filament/filament": "^3.3"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ihabrouk\\EmailTemplates\\Providers\\EmailTemplatesServiceProvider"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/Users/ihabrouk/Herd/packages/*"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "secure-http": false
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
